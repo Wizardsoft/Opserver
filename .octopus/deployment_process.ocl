@@ -12,7 +12,7 @@ step "Deploy to IIS" {
             Octopus.Action.IISWebSite.ApplicationPoolName = "opserver.wizardsoft.io"
             Octopus.Action.IISWebSite.ApplicationPoolPassword = "#{WebsitePassword}"
             Octopus.Action.IISWebSite.ApplicationPoolUsername = "#{WebsiteUsername}"
-            Octopus.Action.IISWebSite.Bindings = "[{\"protocol\":\"http\",\"port\":\"80\",\"host\":\"\",\"thumbprint\":null,\"certificateVariable\":null,\"requireSni\":\"False\",\"enabled\":\"True\"}]"
+            Octopus.Action.IISWebSite.Bindings = "[{\"protocol\":\"https\",\"port\":\"443\",\"host\":\"opserver.wizardsoft.io\",\"thumbprint\":null,\"certificateVariable\":\"WizardsoftIOCert\",\"requireSni\":\"True\",\"enabled\":\"True\"}]"
             Octopus.Action.IISWebSite.CreateOrUpdateWebSite = "True"
             Octopus.Action.IISWebSite.DeploymentType = "webSite"
             Octopus.Action.IISWebSite.EnableAnonymousAuthentication = "True"
