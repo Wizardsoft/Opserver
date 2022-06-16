@@ -52,11 +52,11 @@ jobs:
 
     - name: Package for Octopus        
       run: |
-        octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="Website" --outFolder="$GITHUB_WORKSPACE/artifacts"
+        octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="Website" --outFolder="artifacts"
 
     - name: Push packages to Octopus
       uses: OctopusDeploy/push-package-action@v1.1.2
       with:
         api_key: ${{ secrets.OCTOPUS_API_KEY }}
         server: ${{ secrets.OCTOPUS_SERVER_URL }} 
-        packages: "$GITHUB_WORKSPACE/artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.informationalVersion }}.zip"
+        packages: "artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.informationalVersion }}.zip"
