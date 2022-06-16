@@ -6,10 +6,40 @@ jobs:
   build:
     runs-on: windows-2019
     steps:
+    - uses: actions/checkout@v2
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.13
+      with:
+        versionSpec: '5.x'
+        
+    - name: Display GitVersion config
+      id:   gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.13
+      with:
+        useConfigFile: true
+        configFilePath: GitVersion.yml
+        additionalArguments: "/updateprojectfiles"
+        
+    - name: Display GitVersion outputs
+      run: |
+        echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
+        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"  
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - uses: actions/checkout@v1
-    - name: Build with dotnet
-      run: dotnet build
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish src/OpServer.Web/Opserver.Web.csproj -c Release -o website
+      
