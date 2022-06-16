@@ -1,56 +1,169 @@
 ﻿{
-  "ForwardedHeaders": {
-    "KnownNetworks": ["10.0.0.0/16"],
-    "KnownProxies": [],
-    "ForwardedHeaders": "All"
-  },
-  "Modules": {
-    /* Configuration for the SQL Server dashboard */
-    "Sql": {
-      //"defaultConnectionString": "Data Source=$ServerName$;Initial Catalog=master;Integrated Security=SSPI;",
-      //"refreshIntervalSeconds": 30,
-      //"instances": [
-      //  { "name": "localhost" }
-      //]
-    },
-    /* Configuration for the Redis dashboard */
-    "Redis": {
-      //"Servers": [
-      //  {
-      //    "name": "localhost",
-      //    "instances": [
-      //      {
-      //        "name": "Default",
-      //        "port": 6379
-      //      }
-      //    ]
-      //  }
-      //]
-    },
-    /* Configuration for the Elastic dashboard */
-    "Elastic": {
-      //"clusters": [
-      //  {
-      //    "name": "Local",
-      //    "nodes": [ "localhost" ]
-      //  }
-      //]
-    },
-    /* Configuration for the Exceptions dashboard */
-    "Exceptions": {
-      //"stores": [
-      //  {
-      //    "name": "Local",
-      //    "queryTimeoutMs": 2000,
-      //    "connectionString": "Server=.;Database=Local.Exceptions;Integrated Security=SSPI;"
-      //  }
-      //],
-      "stackTraceReplacements": [
-        {
-          "name": "github",
-          "pattern": "(?<= in )https?://raw.githubusercontent.com/([^/]+/)([^/]+/)([^/]+/)(.*?):line (\\d+)",
-          "replacement": "<a href=\"https://github.com/$1$2blob/$3$4#L$5\">$4:line $5</a>"
+  "Kestrel": {}, // (Optional) Kestrel-specific settings e.g. ports, certificates, etc.
+  "Security": {
+    "provider": "ActiveDirectory",
+    "internalNetwork": [
+      {
+        "name": "JBMAC Consulting",
+        "cidr": "220.233.61.180/32"
+      },
+      {
+        "name": "Bankstown",
+        "cidr": "10.10.10.0/24"
+      }
+    ],
+    "viewEverythingGroups": "Opserver-Viewer",
+    "adminEverythingGroups": "Opserver-Admin;"
+  }, // (Required) Global security settings for Opserver
+  "Modules": { // (All Optional) Per-module settings, only include what you want to monitor
+    "CloudFlare": {}, // The example below would be in place of the empty object here.
+    "Dashboard": {
+      /* Which provider to use for dashboard data 
+     Multiple providers can be used...but things may get crazy when a node is monitored by more than 1 */
+      "providers": {
+        /* If using bosun, an API and a key (in recent bosun versions) needs to be provided */
+        //"bosun": {
+        //  "host": "https://bosun.ds.stackexchange.com",
+        //  "apiKey": "IAmALittleApiKeyShortAndStout"
+
+        //}
+        /* If using WMI, a list of nodes to monitor needs to be provided */
+        "wmi": {
+          "nodes": [
+            "AUSYD04PDC01",
+            "AUSYD04PDC02",
+            "AUSYD04PFS01",
+            "AUSYD04PWB01",
+            "AUSYD04PWB02",
+            "AUSYD04PWB03",
+            "AUSYD04PAP01",
+            "AUSYD04PAP02",
+            "AUSYD04PES01",
+            "AUSYD04PES02",
+            "AUSYD04PES03",
+            "AUSYD04PDB01"
+          ], // List of nodes to monitor
+          "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
+          "dynamicDataTimeoutSeconds": 5, // (Optional) How long to cache dynamic data (utilizations, etc.) - defaults to 30 seconds
+          "historyHours": 24 // (Optional) How long to retain data (in memory) - defaults to 24 hours
         }
+      },
+      /* General dashboard UI settings */
+      "excludePattern": "redis|\\.com", // (Optioal) Regex node name pattern to exclude from the dashboard
+      "cpuWarningPercent": 50, // How much CPU usage before a node is treated as a warning
+      "cpuCriticalPercent": 60, // How much CPU usage before a node is treated as critical
+      "memoryWarningPercent": 75, // How much memory usage before a node is treated as a warning
+      "memoryCriticalPercent": 90, // How much memory usage before a node is treated as critical
+      "diskWarningPercent": 85, // How much disk usage before a node is treated as a warning
+      "diskCriticalPercent": 95, // How much disk usage before a node is treated as critical
+      // "showVolumePerformance": true, // Whether to show volume performance (columns) on the dashboard - defaults to false
+      /* (Optional) Specific category settings,for grouping servers and setting specific thresholds on them */
+      "categories": [
+        {
+          "name": "App Servers",
+          "pattern": "pap",
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        },
+        {
+          "name": "CI / CD Servers",
+          "pattern": "dtk|teamcity|octopus",
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        },
+        {
+          "name": "Database Servers", // Name for this group of servers
+          "pattern": "pdb", // Regex pattern of server names to put in this group
+          "cpuWarningPercent": 65, // How much CPU usage before a node is treated as a warning (defaults to the setting above if not specified)
+          "cpuCriticalPercent": 80, // How much CPU usage before a node is treated as critical (defaults to the setting above if not specified)
+          "memoryWarningPercent": 98, // How much memory usage before a node is treated as a warning (defaults to the setting above if not specified)
+          "memoryCriticalPercent": 99.2, // How much memory usage before a node is treated as critical (defaults to the setting above if not specified)
+          "primaryInterfacePattern": "-TEAM$" // (If the provider supports it) Regex pattern of interface names to treat as "primary" (shown in the dashboard aggregates)
+        },
+        {
+          "name": "Domain Controllers",
+          "pattern": "pdc",
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        },
+        {
+          "name": "File Servers",
+          "pattern": "pfs|pmg",
+          "cpuWarningPercent": 25,
+          "memoryWarningPercent": 75,
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        },
+        {
+          "name": "Search Engine Servers",
+          "pattern": "pel|pes",
+          "memoryWarningPercent": 95, // How much memory usage before a node is treated as a warning (defaults to the setting above if not specified)
+          "memoryCriticalPercent": 99, // How much memory usage before a node is treated as critical (defaults to the setting above if not specified)      
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        },
+        {
+          "name": "Web Servers",
+          "pattern": "pwb",
+          "primaryInterfacePattern": "-TEAM$|-TEAM � Local"
+        }
+      ],
+      /* Like categories, per-node overrides for any of the settings above - illustrating 1 setting but all work */
+      "perNodeSettings": [
+        {
+          "pattern": "EDGE\\d+ \\(INAP\\)", // Regex pattern to match against
+          "primaryInterfacePattern": "GigabitEthernet0/0/0" // Example setting - any of the above (e.g. warning/critical thresoholds) work
+        }
+      ]
+    },
+    "Elastic": {
+      // Which security groups can view the dashboard ("*" for everyone)
+      // "viewGroups": "*",
+      // Which security groups have permissions to perform actions (removing a server from rotation, etc.)
+      // "adminGroups": "SysAdmins",
+      /* The clusters to monitor */
+      "clusters": [
+        {
+          "name": "production-aus", // Name of the cluster (used in the UI before fetching of info is complete)
+          "refreshIntervalSeconds": 10, // (Optional) How often to poll the cluster - defaults to 120 seconds
+          // Nodes in this cluster, use "node:port" if not using :9200 for elastic
+          "nodes": [
+            "AUSYD04PES01",
+            "AUSYD04PES02",
+            "AUSYD04PES03"
+          ]
+          // },
+          // {
+          //     "name": "qa-aus", // Name of the cluster (used in the UI before fetching of info is complete)
+          //     "refreshIntervalSeconds": 10, // (Optional) How often to poll the cluster - defaults to 120 seconds
+          //     // Nodes in this cluster, use "node:port" if not using :9200 for elastic
+          //     "nodes": [
+          //       "QA01"
+          //     ]
+        }
+      ]
+    },
+    "Exceptions": {},
+    "HAProxy": {},
+    "PagerDuty": {
+      // (Required) PagerDuty API key
+      "APIKey": "",
+      "APIBaseURL": "https://wizardsoft.pagerduty.com/api/v1",
+      "onCallToShow": 3, // (Optional - default: 2) The number of users to show per schedule in the dashboard (top N by escalation)
+      "daysToCache": 60, // (Optional - default: 60) How many days of incidents to cache in the dashboard
+      "headerTitle": "Contacting SRE On Call", // (Optional) Title for the information section
+      // (Optional) Section of HTML to show in the info section, for providing on-call phone numbers, etc.
+      "headerHtml": "<p>First, <b>if this tab is <span class=\"text-danger\">RED<span></b> our alerting systems have notified us of the problem. If you are having an issue ...</p></div>",
+      /* Map of Opserver account names (usually Active Directory) to PagerDuty emails
+       With this provided, known users can take on-call because we know how to map the action to. */
+      "userNameMap": [
+        {
+          "opServerName": "ben.macpherson", // Opserver login (probably Active Directory user name)
+          "emailUser": "ben@recruitwizard.com" // PagerDuty email
+        }
+      ]
+    },
+    "Redis": {},
+    "Sql": {
+      "defaultConnectionString": "Data Source=$ServerName$;Initial Catalog=master;Integrated Security=SSPI;",
+      "refreshIntervalSeconds": 30,
+      "instances": [
+        { "name": "AUSYD04PDB01,1337" }
       ]
     }
   }
