@@ -52,4 +52,4 @@ jobs:
 
     - name: Package For Octopus        
       run: |
-        octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="OpServer/Website" --outFolder="$GITHUB_WORKSPACE/artifacts"
+        octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="Website" --outFolder="$GITHUB_WORKSPACE/artifacts"
