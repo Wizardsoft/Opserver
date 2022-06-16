@@ -1,4 +1,4 @@
-name: CI Build
+﻿name: CI Build
 
 on: [push]
 
@@ -45,3 +45,10 @@ jobs:
     - name: Publish
       run: dotnet publish src/OpServer.Web/Opserver.Web.csproj -c Release -o website
       
+    - name: Install Octopus CLI
+      uses: OctopusDeploy/install-octopus-cli-action@v1.2.0
+      with:
+        version: latest
+        
+      run: |
+        octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="$GITHUB_WORKSPACE/OpServer/Website" --outFolder="$GITHUB_WORKSPACE/artifacts"
