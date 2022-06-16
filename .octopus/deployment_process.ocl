@@ -6,7 +6,7 @@ step "Deploy to IIS" {
     action {
         action_type = "Octopus.IIS"
         properties = {
-            Octopus.Action.EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.JsonConfigurationVariables"
+            Octopus.Action.EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.CustomDirectory,Octopus.Features.JsonConfigurationVariables"
             Octopus.Action.IISWebSite.ApplicationPoolFrameworkVersion = "No Managed Code"
             Octopus.Action.IISWebSite.ApplicationPoolIdentityType = "SpecificUser"
             Octopus.Action.IISWebSite.ApplicationPoolName = "opserver.wizardsoft.io"
@@ -24,6 +24,8 @@ step "Deploy to IIS" {
             Octopus.Action.IISWebSite.WebApplication.ApplicationPoolIdentityType = "ApplicationPoolIdentity"
             Octopus.Action.IISWebSite.WebRootType = "packageRoot"
             Octopus.Action.IISWebSite.WebSiteName = "opserver.wizardsoft.io"
+            Octopus.Action.Package.CustomInstallationDirectory = "c:\\Websites\\opserver.wizardsoft.io"
+            Octopus.Action.Package.CustomInstallationDirectoryShouldBePurgedBeforeDeployment = "True"
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "opserverSettings.Json"
