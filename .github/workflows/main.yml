@@ -67,3 +67,32 @@ jobs:
         api_key: ${{ secrets.OCTOPUS_API_KEY }}
         server: ${{ secrets.OCTOPUS_SERVER_URL }} 
         packages: "artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.fullSemVer }}.zip"
+
+    - name: Generate Octopus Deploy build information
+      uses: xo-energy/action-octopus-build-information@v1.3.14
+      with:
+        octopus_api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        octopus_server: ${{ secrets.OCTOPUS_SERVER_URL }}
+        octopus_project: 'Projects-821'
+        output_path: octopus
+        push_package_ids: 'Wizardsoft.OpServer'
+        push_overwrite_mode: OverwriteExisting
+        push_version: ${{ steps.gitversion.outputs.fullSemVer }}
+
+    - name: Create a release in Octopus
+      uses: OctopusDeploy/create-release-action@v1.1.3
+      if: github.ref == 'refs/heads/main'
+      with:
+        server: ${{ secrets.OCTOPUS_SERVER_URL }}          
+        api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        project: 'Projects-821'
+        package_version: ${{ steps.gitversion.outputs.fullSemVer }}
+        git_ref: ${{ github.ref }}
+        
+    - name: Tag Release in GitHub
+      uses: avakar/tag-and-release@v1
+      if: github.ref == 'refs/heads/main'
+      with:
+        tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.WizardsoftGitHubToken }}        
