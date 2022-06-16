@@ -59,4 +59,4 @@ jobs:
       with:
         api_key: ${{ secrets.OCTOPUS_API_KEY }}
         server: ${{ secrets.OCTOPUS_SERVER_URL }} 
-        packages: "artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.informationalVersion }}.zip"
+        packages: "$GITHUB_WORKSPACE/artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.informationalVersion }}.zip"
