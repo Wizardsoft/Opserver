@@ -43,13 +43,20 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Publish
-      run: dotnet publish src/OpServer.Web/Opserver.Web.csproj -c Release -o website
+      run: dotnet publish src/OpServer.Web/Opserver.Web.csproj -c Release -o website --self-contained -r win-x64
       
     - name: Install Octopus CLI
       uses: OctopusDeploy/install-octopus-cli-action@v1.2.0
       with:
         version: latest
 
-    - name: Package For Octopus        
+    - name: Package for Octopus        
       run: |
         octo pack --id="Wizardsoft.OpServer" --format="Zip" --version=${{ steps.gitversion.outputs.informationalVersion }} --basePath="Website" --outFolder="$GITHUB_WORKSPACE/artifacts"
+
+    - name: Push packages to Octopus
+      uses: OctopusDeploy/push-package-action@v1.1.2
+      with:
+        api_key: ${{ secrets.OCTOPUS_API_KEY }}
+        server: ${{ secrets.OCTOPUS_SERVER_URL }} 
+        packages: "artifacts/Wizardsoft.OpServer.${{ steps.gitversion.outputs.informationalVersion }}.zip"
