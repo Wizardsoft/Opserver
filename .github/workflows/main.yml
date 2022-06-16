@@ -87,3 +87,11 @@ jobs:
         project: 'Projects-821'
         package_version: ${{ steps.gitversion.outputs.fullSemVer }}
         git_ref: ${{ github.ref }}
+        
+    - name: Tag Release in GitHub
+      uses: avakar/tag-and-release@v1
+      if: github.ref == 'refs/heads/main'
+      with:
+        tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.WizardsoftGitHubToken }}        
