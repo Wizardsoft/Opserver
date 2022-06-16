@@ -3,7 +3,18 @@ step "Deploy to IIS" {
         Octopus.Action.TargetRoles = "server_web_standalone"
     }
 
-    action {
+    action "IIS AppPool - Stop" {
+        properties = {
+            AppPoolCheckDelay = "500"
+            AppPoolCheckRetries = "20"
+            AppPoolName = "opserver.wizardsoft.io"
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Template.Id = "ActionTemplates-75"
+            Octopus.Action.Template.Version = "6"
+        }
+    }
+
+    action "Deploy to IIS" {
         action_type = "Octopus.IIS"
         properties = {
             Octopus.Action.EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.CustomDirectory,Octopus.Features.JsonConfigurationVariables"
