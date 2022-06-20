@@ -17,7 +17,7 @@
   <ItemGroup>
     <Content Include="Config\*.config.example" />
     <Content Update="Config\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="false" />
-    <Content Update="opserverSettings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="false" />
+    <Content Update="opserverSettings.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
     <None Include="Help\**\*" />
     <None Include="Config\Readme.txt" />
     <None Include="Config\*.example.json" />

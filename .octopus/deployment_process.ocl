@@ -1,0 +1,57 @@
+step "Deploy to IIS" {
+    properties = {
+        Octopus.Action.TargetRoles = "server_web_standalone"
+    }
+
+    action "IIS AppPool - Stop" {
+        properties = {
+            AppPoolCheckDelay = "500"
+            AppPoolCheckRetries = "20"
+            AppPoolName = "opserver.wizardsoft.io"
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Template.Id = "ActionTemplates-75"
+            Octopus.Action.Template.Version = "6"
+        }
+    }
+
+    action "Deploy to IIS" {
+        action_type = "Octopus.IIS"
+        properties = {
+            Octopus.Action.EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.CustomDirectory,Octopus.Features.JsonConfigurationVariables"
+            Octopus.Action.IISWebSite.ApplicationPoolFrameworkVersion = "No Managed Code"
+            Octopus.Action.IISWebSite.ApplicationPoolIdentityType = "SpecificUser"
+            Octopus.Action.IISWebSite.ApplicationPoolName = "opserver.wizardsoft.io"
+            Octopus.Action.IISWebSite.ApplicationPoolPassword = "#{RunAsPassword}"
+            Octopus.Action.IISWebSite.ApplicationPoolUsername = "#{RunAsUsername}"
+            Octopus.Action.IISWebSite.Bindings = "[{\"protocol\":\"https\",\"port\":\"443\",\"host\":\"opserver.wizardsoft.io\",\"thumbprint\":null,\"certificateVariable\":\"WizardsoftIOCert\",\"requireSni\":\"True\",\"enabled\":\"True\"}]"
+            Octopus.Action.IISWebSite.CreateOrUpdateWebSite = "True"
+            Octopus.Action.IISWebSite.DeploymentType = "webSite"
+            Octopus.Action.IISWebSite.EnableAnonymousAuthentication = "True"
+            Octopus.Action.IISWebSite.EnableBasicAuthentication = "False"
+            Octopus.Action.IISWebSite.EnableWindowsAuthentication = "False"
+            Octopus.Action.IISWebSite.StartApplicationPool = "True"
+            Octopus.Action.IISWebSite.StartWebSite = "True"
+            Octopus.Action.IISWebSite.WebApplication.ApplicationPoolFrameworkVersion = "v4.0"
+            Octopus.Action.IISWebSite.WebApplication.ApplicationPoolIdentityType = "ApplicationPoolIdentity"
+            Octopus.Action.IISWebSite.WebRootType = "packageRoot"
+            Octopus.Action.IISWebSite.WebSiteName = "opserver.wizardsoft.io"
+            Octopus.Action.Package.CustomInstallationDirectory = "c:\\Websites\\opserver.wizardsoft.io"
+            Octopus.Action.Package.CustomInstallationDirectoryShouldBePurgedBeforeDeployment = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.JsonConfigurationVariablesTargets = "opserverSettings.Json"
+            Octopus.Action.Package.PackageId = "Wizardsoft.OpServer"
+            Octopus.Action.RunOnServer = "false"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "Wizardsoft.OpServer"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
