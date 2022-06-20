@@ -140,24 +140,7 @@
     },
     "Exceptions": {},
     "HAProxy": {},
-    "PagerDuty": {
-      // (Required) PagerDuty API key
-      "APIKey": "",
-      "APIBaseURL": "https://wizardsoft.pagerduty.com/api/v1",
-      "onCallToShow": 3, // (Optional - default: 2) The number of users to show per schedule in the dashboard (top N by escalation)
-      "daysToCache": 60, // (Optional - default: 60) How many days of incidents to cache in the dashboard
-      "headerTitle": "Contacting SRE On Call", // (Optional) Title for the information section
-      // (Optional) Section of HTML to show in the info section, for providing on-call phone numbers, etc.
-      "headerHtml": "<p>First, <b>if this tab is <span class=\"text-danger\">RED<span></b> our alerting systems have notified us of the problem. If you are having an issue ...</p></div>",
-      /* Map of Opserver account names (usually Active Directory) to PagerDuty emails
-       With this provided, known users can take on-call because we know how to map the action to. */
-      "userNameMap": [
-        {
-          "opServerName": "ben.macpherson", // Opserver login (probably Active Directory user name)
-          "emailUser": "ben@recruitwizard.com" // PagerDuty email
-        }
-      ]
-    },
+    "PagerDuty": {},
     "Redis": {},
     "Sql": {
       "defaultConnectionString": "Data Source=$ServerName$;Initial Catalog=master;Integrated Security=SSPI;",
