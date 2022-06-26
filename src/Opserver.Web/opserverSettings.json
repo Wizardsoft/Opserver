@@ -37,9 +37,6 @@
             "AUSYD04PWB02",
             "AUSYD04PAP01",
             "AUSYD04PAP02",
-            "AUSYD04PES01",
-            "AUSYD04PES02",
-            "AUSYD04PES03",
             "AUSYD04PDB01"
           ], // List of nodes to monitor
           "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
@@ -122,9 +119,9 @@
           "refreshIntervalSeconds": 10, // (Optional) How often to poll the cluster - defaults to 120 seconds
           // Nodes in this cluster, use "node:port" if not using :9200 for elastic
           "nodes": [
-            "AUSYD04PES01",
-            "AUSYD04PES02",
-            "AUSYD04PES03"
+            "10.0.2.201",
+            "10.0.2.202",
+            "10.0.2.203"
           ]
           // },
           // {
