@@ -144,7 +144,7 @@
       "refreshIntervalSeconds": 30,
       "instances": [
         { "name": "AUSYD04PDB01,1337" },
-        { "name": "AUSYD04PDB02\\MSSQLSERVER,1337" }
+        { "name": "AUSYD04PDB02,1337" }
       ]
     }
   }
