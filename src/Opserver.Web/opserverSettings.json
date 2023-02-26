@@ -36,7 +36,9 @@
             "AUSYD04PWB02",
             "AUSYD04PAP01",
             "AUSYD04PAP02",
-            "AUSYD04PDB01"
+            "AUSYD04PDB01",
+            "AUSYD04PDB02",
+            "QA01"
           ], // List of nodes to monitor
           "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
           "dynamicDataTimeoutSeconds": 5, // (Optional) How long to cache dynamic data (utilizations, etc.) - defaults to 30 seconds
@@ -141,7 +143,8 @@
       "defaultConnectionString": "Data Source=$ServerName$;Initial Catalog=master;Integrated Security=SSPI;",
       "refreshIntervalSeconds": 30,
       "instances": [
-        { "name": "AUSYD04PDB01,1337" }
+        { "name": "AUSYD04PDB01,1337" },
+        { "name": "AUSYD04PDB02,1337" }
       ]
     }
   }
