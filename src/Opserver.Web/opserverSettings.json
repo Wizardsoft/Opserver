@@ -145,7 +145,7 @@
       "instances": [
         { "name": "AUSYD04PDB01,1337" },
         { "name": "AUSYD04PDB02,1337" },
-        { "name": "10.0.2.250\MSSQLSERVER,1337" }
+        { "name": "10.0.2.250,1337" }
       ]
     }
   }
