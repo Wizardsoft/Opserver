@@ -34,8 +34,6 @@
             "AUSYD04PDC02",
             "AUSYD04PWB01",
             "AUSYD04PWB02",
-            "AUSYD04PAP01",
-            "AUSYD04PAP02",
             "AUSYD04PDB02"
           ], // List of nodes to monitor
           "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
