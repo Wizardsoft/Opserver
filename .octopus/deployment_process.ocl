@@ -1,9 +1,11 @@
-step "Deploy to IIS" {
+step "deploy-to-iis" {
+    name = "Deploy to IIS"
     properties = {
         Octopus.Action.TargetRoles = "server_web_standalone"
     }
 
-    action "IIS AppPool - Stop" {
+    action "iis-apppool-stop" {
+        name = "IIS AppPool - Stop"
         properties = {
             AppPoolCheckDelay = "500"
             AppPoolCheckRetries = "20"
@@ -14,8 +16,9 @@ step "Deploy to IIS" {
         }
     }
 
-    action "Deploy to IIS" {
+    action "deploy-to-iis-1" {
         action_type = "Octopus.IIS"
+        name = "Deploy to IIS"
         properties = {
             Octopus.Action.EnabledFeatures = "Octopus.Features.IISWebSite,Octopus.Features.CustomDirectory,Octopus.Features.JsonConfigurationVariables"
             Octopus.Action.IISWebSite.ApplicationPoolFrameworkVersion = "No Managed Code"
@@ -38,7 +41,7 @@ step "Deploy to IIS" {
             Octopus.Action.Package.CustomInstallationDirectory = "c:\\Websites\\opserver.wizardsoft.io"
             Octopus.Action.Package.CustomInstallationDirectoryShouldBePurgedBeforeDeployment = "True"
             Octopus.Action.Package.DownloadOnTentacle = "False"
-            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.FeedId = "octopus-server-built-in"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "opserverSettings.Json"
             Octopus.Action.Package.PackageId = "Wizardsoft.OpServer"
             Octopus.Action.RunOnServer = "false"
@@ -47,7 +50,7 @@ step "Deploy to IIS" {
 
         packages {
             acquisition_location = "Server"
-            feed = "Octopus Server (built-in)"
+            feed = "octopus-server-built-in"
             package_id = "Wizardsoft.OpServer"
             properties = {
                 SelectionMode = "immediate"
