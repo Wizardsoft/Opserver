@@ -139,7 +139,8 @@
       "defaultConnectionString": "Data Source=$ServerName$;Initial Catalog=master;Integrated Security=SSPI;",
       "refreshIntervalSeconds": 30,
       "instances": [
-        { "name": "AUSYD04PDB02,1337" }
+        { "name": "AUSYD04PDB02,1337" },
+        { "name": "STAGING" }
       ]
     }
   }
