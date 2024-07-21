@@ -31,7 +31,6 @@
         "wmi": {
           "nodes": [
             "AUSYD04PDC01",
-            "AUSYD04PDC02",
             "AUSYD04PWB01",
             "AUSYD04PDB02"
           ], // List of nodes to monitor
